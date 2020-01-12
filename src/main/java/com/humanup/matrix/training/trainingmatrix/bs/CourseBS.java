@@ -12,6 +12,4 @@ public interface CourseBS {
     List<CourseVO> getListCourseByTypeTitle(String typeTitle);
     List<CourseVO> getListCourseByTrainerEmail(String trainerEmail);
     List<CourseVO> getListCourseByInternEmail(String internEmail);
-    boolean addCourseTypeToCourse(String courseTypeTitle, String courseTitle);
-    boolean addTrainerToCourse(String trainerEmail, String courseTitle);
 }

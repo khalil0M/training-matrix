@@ -31,16 +31,25 @@ public class ReviewBSImpl implements ReviewBS {
     @Override
     @Transactional
     public boolean createReview(final ReviewVO review) {
-        final Optional<Intern> intern =  internDAO.findByEmailPerson(review.getInternEmail());
-        final Optional<Course> course =  courseDAO.findByTitle(review.getCourseTitle());
-        final Review reviewToSave = Review.builder()
-                .intern(intern.get())
-                .course(course.get())
-                .score(review.getScore())
-                .createdOn(review.getCreatedOn())
-                .build();
-        reviewDAO.save(reviewToSave);
-        return true;
+        final Optional<Intern> intern =  internDAO.findById(review.getInternId());
+        final Optional<Course> course =  courseDAO.findById(review.getCourseId());
+        if(intern.isPresent() && course.isPresent()) {
+            final Intern internFound =  intern.get();
+            final Course courseFound =  course.get();
+            final Review reviewToSave = Review.builder()
+                    .id(InternCourseId.builder()
+                            .courseId(review.getCourseId())
+                            .internId(review.getInternId())
+                            .build())
+                    .intern(internFound)
+                    .course(courseFound)
+                    .score(review.getScore())
+                    .createdOn(review.getCreatedOn())
+                    .build();
+            reviewDAO.save(reviewToSave);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -59,7 +68,9 @@ public class ReviewBSImpl implements ReviewBS {
 
     @Override
     public ReviewVO getReviewById(final long courseId, final long internId) {
-        final Optional<Review> reviewFound = reviewDAO.findById(new InternCourseId(internId, courseId));
+        final Optional<Review> reviewFound = reviewDAO.findById(InternCourseId.builder()
+                .internId(internId)
+                .courseId(courseId).build());
         return reviewFound.map(review -> ReviewVO.builder()
                 .courseId(review.getId().getCourseId())
                 .internId(review.getId().getInternId())

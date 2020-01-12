@@ -42,8 +42,8 @@ public class CourseTypeController {
     @Operation(summary = "Find course type by title", description = "Find course type by title.", tags = { "course type" })
     @RequestMapping(value="/coursetype/title", method=RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity getCourseTypeByTitle(@RequestParam(value="title") final String title) {
-        final Optional<CourseTypeVO> courseTypeFound = Optional.ofNullable(courseTypeBS.getCourseTypeByTitle(title));
+    public ResponseEntity getCourseTypeByTitle(@RequestParam(value="typeTitle") final String typeTitle) {
+        final Optional<CourseTypeVO> courseTypeFound = Optional.ofNullable(courseTypeBS.getCourseTypeByTitle(typeTitle));
         if(courseTypeFound.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

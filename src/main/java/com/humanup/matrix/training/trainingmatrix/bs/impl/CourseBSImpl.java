@@ -198,25 +198,4 @@ public class CourseBSImpl implements CourseBS {
                                 .collect(Collectors.toList()))
                         .build()).collect(Collectors.toList());
     }
-
-    @Override
-    @Transactional
-    public boolean addCourseTypeToCourse(final String courseTypeTitle, final String courseTitle) {
-        final Course courseToUpdate = courseDAO.findByTitle(courseTitle).get();
-        final CourseType courseType = courseTypeDAO.findByTypeTitle(courseTypeTitle).get();
-        courseToUpdate.setCourseType(courseType);
-        courseDAO.save(courseToUpdate);
-        return true;
-    }
-
-    @Override
-    @Transactional
-    public boolean addTrainerToCourse(final String trainerEmail, final String courseTitle) {
-        final Course courseToUpdate = courseDAO.findByTitle(courseTitle).get();
-        final Trainer trainer = trainerDAO.findByEmail(trainerEmail).get();
-        courseToUpdate.setTrainer(trainer);
-        courseDAO.save(courseToUpdate);
-        return true;
-    }
-
 }

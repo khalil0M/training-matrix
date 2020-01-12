@@ -20,7 +20,7 @@ public class ReviewController {
     @RequestMapping(value="/review", method=RequestMethod.POST,consumes={ "application/json"})
     @ResponseBody
     public ResponseEntity createReview(@RequestBody final ReviewVO review) {
-        final Optional<Object> reviewFound = Optional.ofNullable(reviewBS.getReviewById(review.getCourseId(), review.getInternId()));
+        final Optional<ReviewVO> reviewFound = Optional.ofNullable(reviewBS.getReviewById(review.getCourseId(), review.getInternId()));
         if(reviewFound.isPresent()) {
             return ResponseEntity.status(HttpStatus.FOUND).body("Review already exists.");
         }
@@ -31,7 +31,7 @@ public class ReviewController {
     @Operation(summary = "Find review by id", description = "Find review by id.", tags = { "review" })
     @RequestMapping(value="/review", method=RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity getReviewById(@RequestParam(value="courseid") final long courseId, @RequestParam(value="internid") final long internId){
+    public ResponseEntity getReviewById(@RequestParam(value="courseId") final long courseId, @RequestParam(value="internId") final long internId){
         final Optional<ReviewVO> reviewFound = Optional.ofNullable(reviewBS.getReviewById(courseId, internId));
         if(reviewFound.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -53,8 +53,8 @@ public class ReviewController {
     @Operation(summary = "Find review by course title", description = "Find review by course title", tags = { "review" })
     @RequestMapping(value="/review/all/coursetitle", method=RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity getAllReviewByCourseTitle(@RequestParam(value="coursetitle") final String coursetitle){
-        final List<ReviewVO> reviewListFound = reviewBS.getListReviewByCourseTitle(coursetitle);
+    public ResponseEntity getAllReviewByCourseTitle(@RequestParam(value="courseTitle") final String courseTitle){
+        final List<ReviewVO> reviewListFound = reviewBS.getListReviewByCourseTitle(courseTitle);
         if(reviewListFound.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -64,8 +64,8 @@ public class ReviewController {
     @Operation(summary = "Find review by intern email", description = "Find review by intern email", tags = { "review" })
     @RequestMapping(value="/review/all/internemail", method=RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity getAllReviewByInternEmail(@RequestParam(value="internemail") final String internemail){
-        final List<ReviewVO> reviewListFound = reviewBS.getListReviewByInternEmail(internemail);
+    public ResponseEntity getAllReviewByInternEmail(@RequestParam(value="internEmail") final String internEmail){
+        final List<ReviewVO> reviewListFound = reviewBS.getListReviewByInternEmail(internEmail);
         if(reviewListFound.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

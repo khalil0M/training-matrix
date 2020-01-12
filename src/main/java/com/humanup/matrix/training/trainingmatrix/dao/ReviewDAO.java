@@ -11,8 +11,8 @@ import java.util.List;
 @Repository
 public interface ReviewDAO extends CrudRepository<Review, InternCourseId> {
     List<Review> findAllByScore(int score);
-    @Query("SELECT r FROM Review r WHERE lower(r.course.title) = :courseTitle")
+    @Query("SELECT r FROM Review r WHERE r.course.title = :courseTitle")
     List<Review> findAllByCourseTitle(String courseTitle);
-    @Query("SELECT r FROM Review r WHERE lower(r.intern.emailPerson) = :internEmail")
+    @Query("SELECT r FROM Review r WHERE r.intern.emailPerson = :internEmail")
     List<Review> findAllByInternEmail(String internEmail);
 }

@@ -18,7 +18,7 @@ import java.io.Serializable;
 @Embeddable
 public class InternCourseId implements Serializable {
     @Column(name = "intern_id")
-    Long internId;
+    long internId;
     @Column(name = "course_id")
-    Long courseId;
+    long courseId;
 }

@@ -62,7 +62,7 @@ public class InternController {
     }
 
     @Operation(summary = "Find all interns by course title", description = "Find all interns by course title", tags = { "intern" })
-    @RequestMapping(value="/intern/all/courseTitle", method= RequestMethod.GET)
+    @RequestMapping(value="/intern/all/coursetitle", method= RequestMethod.GET)
     @ResponseBody
     public ResponseEntity getAllInternByCourseTitle(@RequestParam(value="courseTitle") final String courseTitle) {
         final List<InternVO> internListFound = internBS.getListInternByCourseTitle(courseTitle);
