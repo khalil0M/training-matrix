@@ -1,11 +1,8 @@
 package com.humanup.matrix.training.trainingmatrix.bs.impl;
 
 import com.humanup.matrix.training.trainingmatrix.bs.ReviewBS;
-import com.humanup.matrix.training.trainingmatrix.dao.CourseDAO;
-import com.humanup.matrix.training.trainingmatrix.dao.InternDAO;
+import com.humanup.matrix.training.trainingmatrix.bs.impl.sender.RabbitMQReviewSender;
 import com.humanup.matrix.training.trainingmatrix.dao.ReviewDAO;
-import com.humanup.matrix.training.trainingmatrix.dao.entities.Course;
-import com.humanup.matrix.training.trainingmatrix.dao.entities.Intern;
 import com.humanup.matrix.training.trainingmatrix.dao.entities.InternCourseId;
 import com.humanup.matrix.training.trainingmatrix.dao.entities.Review;
 import com.humanup.matrix.training.trainingmatrix.vo.ReviewVO;
@@ -24,32 +21,16 @@ public class ReviewBSImpl implements ReviewBS {
     @Autowired
     private ReviewDAO reviewDAO;
     @Autowired
-    private InternDAO internDAO;
-    @Autowired
-    private CourseDAO courseDAO;
+    private RabbitMQReviewSender rabbitMQReviewSender;
 
     @Override
-    @Transactional
+    @Transactional(transactionManager="transactionManagerWrite")
     public boolean createReview(final ReviewVO review) {
-        final Optional<Intern> intern =  internDAO.findById(review.getInternId());
-        final Optional<Course> course =  courseDAO.findById(review.getCourseId());
-        if(intern.isPresent() && course.isPresent()) {
-            final Intern internFound =  intern.get();
-            final Course courseFound =  course.get();
-            final Review reviewToSave = Review.builder()
-                    .id(InternCourseId.builder()
-                            .courseId(review.getCourseId())
-                            .internId(review.getInternId())
-                            .build())
-                    .intern(internFound)
-                    .course(courseFound)
-                    .score(review.getScore())
-                    .createdOn(review.getCreatedOn())
-                    .build();
-            reviewDAO.save(reviewToSave);
-            return true;
+        if(null == review) {
+            return false;
         }
-        return false;
+        rabbitMQReviewSender.send(review);
+        return true;
     }
 
     @Override

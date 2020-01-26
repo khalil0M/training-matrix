@@ -14,12 +14,14 @@ import java.util.List;
 @Builder
 @ToString(of= {"id","typeTitle","courses"})
 @Entity
+@Table(name = "course_type")
 public class CourseType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false, nullable = false)
     Long id;
+    @Column(name = "type_title")
     String typeTitle;
-    @OneToMany(mappedBy="courseType",fetch=FetchType.LAZY)
+    @OneToMany(mappedBy="courseType",fetch=FetchType.EAGER)
     List<Course> courses;
 }

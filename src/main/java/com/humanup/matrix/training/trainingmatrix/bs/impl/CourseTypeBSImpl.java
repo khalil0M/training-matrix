@@ -1,7 +1,7 @@
 package com.humanup.matrix.training.trainingmatrix.bs.impl;
 
 import com.humanup.matrix.training.trainingmatrix.bs.CourseTypeBS;
-import com.humanup.matrix.training.trainingmatrix.dao.CourseDAO;
+import com.humanup.matrix.training.trainingmatrix.bs.impl.sender.RabbitMQCourseTypeSender;
 import com.humanup.matrix.training.trainingmatrix.dao.CourseTypeDAO;
 import com.humanup.matrix.training.trainingmatrix.dao.entities.CourseType;
 import com.humanup.matrix.training.trainingmatrix.vo.CourseTypeVO;
@@ -20,15 +20,15 @@ public class CourseTypeBSImpl implements CourseTypeBS {
     @Autowired
     private CourseTypeDAO courseTypeDAO;
     @Autowired
-    private CourseDAO courseDAO;
+    private RabbitMQCourseTypeSender rabbitMQCourseTypeSender;
 
     @Override
-    @Transactional
+    @Transactional(transactionManager="transactionManagerWrite")
     public boolean createCourseType(final CourseTypeVO courseType) {
-        final CourseType courseTypeToSave = CourseType.builder()
-                .typeTitle(courseType.getTypeTitle())
-                .build();
-        courseTypeDAO.save(courseTypeToSave);
+        if(null == courseType) {
+            return false;
+        }
+        rabbitMQCourseTypeSender.send(courseType);
         return true;
     }
 

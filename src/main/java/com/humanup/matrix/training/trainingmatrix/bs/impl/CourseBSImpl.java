@@ -1,14 +1,9 @@
 package com.humanup.matrix.training.trainingmatrix.bs.impl;
 
 import com.humanup.matrix.training.trainingmatrix.bs.CourseBS;
+import com.humanup.matrix.training.trainingmatrix.bs.impl.sender.RabbitMQCourseSender;
 import com.humanup.matrix.training.trainingmatrix.dao.CourseDAO;
-import com.humanup.matrix.training.trainingmatrix.dao.CourseTypeDAO;
-import com.humanup.matrix.training.trainingmatrix.dao.ReviewDAO;
-import com.humanup.matrix.training.trainingmatrix.dao.TrainerDAO;
 import com.humanup.matrix.training.trainingmatrix.dao.entities.Course;
-import com.humanup.matrix.training.trainingmatrix.dao.entities.CourseType;
-import com.humanup.matrix.training.trainingmatrix.dao.entities.Review;
-import com.humanup.matrix.training.trainingmatrix.dao.entities.Trainer;
 import com.humanup.matrix.training.trainingmatrix.vo.CourseVO;
 import com.humanup.matrix.training.trainingmatrix.vo.ReviewVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,28 +22,15 @@ public class CourseBSImpl implements CourseBS {
     @Autowired
     private CourseDAO courseDAO;
     @Autowired
-    private CourseTypeDAO courseTypeDAO;
-    @Autowired
-    private TrainerDAO trainerDAO;
-    @Autowired
-    private ReviewDAO reviewDAO;
+    private RabbitMQCourseSender rabbitMQCourseSender;
 
     @Override
-    @Transactional
+    @Transactional(transactionManager="transactionManagerWrite")
     public boolean createCourse(final CourseVO course) {
-        final Optional<CourseType> courseType = courseTypeDAO.findByTypeTitle(course.getCourseTypeTitle());
-        final Optional<Trainer> trainer =  trainerDAO.findByEmail(course.getTrainerEmail());
-        final List<Review> reviewList =  reviewDAO.findAllByCourseTitle(course.getTitle());
-        final Course courseToSave = Course.builder()
-                .title(course.getTitle())
-                .description(course.getDescription())
-                .startDate(course.getStartDate())
-                .endDate(course.getEndDate())
-                .courseType(courseType.get())
-                .trainer(trainer.get())
-                .reviewList(reviewList)
-                .build();
-        courseDAO.save(courseToSave);
+        if(null == course) {
+            return false;
+        }
+        rabbitMQCourseSender.send(course);
         return true;
     }
 

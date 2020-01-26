@@ -14,15 +14,20 @@ import java.util.List;
 @Builder
 @ToString(of= {"id","name","address","phone","email","courses"})
 @Entity
+@Table(name = "trainer")
 public class Trainer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false, nullable = false)
     Long id;
+    @Column(name = "name")
     String name;
+    @Column(name = "address")
     String address;
+    @Column(name = "phone")
     String phone;
+    @Column(name = "email")
     String email;
-    @OneToMany(mappedBy="trainer",fetch=FetchType.LAZY)
+    @OneToMany(mappedBy="trainer",fetch=FetchType.EAGER)
     List<Course> courses;
 }

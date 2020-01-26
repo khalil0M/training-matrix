@@ -3,6 +3,7 @@ package com.humanup.matrix.training.trainingmatrix.vo;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @FieldDefaults(level= AccessLevel.PRIVATE)
@@ -12,7 +13,7 @@ import java.util.Date;
 @Setter
 @Builder
 @ToString(of={"courseId","internId","course","intern","createdOn","score"})
-public class ReviewVO {
+public class ReviewVO implements Serializable {
     long courseId;
     long internId;
     String courseTitle;

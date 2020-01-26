@@ -1,9 +1,8 @@
 package com.humanup.matrix.training.trainingmatrix.bs.impl;
 
 import com.humanup.matrix.training.trainingmatrix.bs.TrainerBS;
-import com.humanup.matrix.training.trainingmatrix.dao.CourseDAO;
+import com.humanup.matrix.training.trainingmatrix.bs.impl.sender.RabbitMQTrainerSender;
 import com.humanup.matrix.training.trainingmatrix.dao.TrainerDAO;
-import com.humanup.matrix.training.trainingmatrix.dao.entities.Course;
 import com.humanup.matrix.training.trainingmatrix.dao.entities.Trainer;
 import com.humanup.matrix.training.trainingmatrix.vo.TrainerVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,20 +20,15 @@ public class TrainerBSImpl implements TrainerBS {
     @Autowired
     private TrainerDAO trainerDAO;
     @Autowired
-    private CourseDAO courseDAO;
+    private RabbitMQTrainerSender rabbitMQTrainerSender;
 
     @Override
-    @Transactional
+    @Transactional(transactionManager="transactionManagerWrite")
     public boolean createTrainer(final TrainerVO trainer) {
-        final List<Course> courseList =  courseDAO.findAllByTrainerEmail(trainer.getEmail());
-        final Trainer trainerToSave = Trainer.builder()
-                .name(trainer.getName())
-                .email(trainer.getEmail())
-                .address(trainer.getAddress())
-                .phone(trainer.getPhone())
-                .courses(courseList)
-                .build();
-        trainerDAO.save(trainerToSave);
+        if(null == trainer) {
+            return false;
+        }
+        rabbitMQTrainerSender.send(trainer);
         return true;
     }
 
