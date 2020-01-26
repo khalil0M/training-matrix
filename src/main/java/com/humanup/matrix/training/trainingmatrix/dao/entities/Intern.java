@@ -15,11 +15,13 @@ import java.util.List;
 @Builder
 @ToString(of= {"id","emailPerson","reviewList"})
 @Entity
+@Table(name = "intern")
 public class Intern {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false, nullable = false)
     Long id;
+    @Column(name = "email_person")
     String emailPerson;
     @OneToMany(
             mappedBy = "intern",

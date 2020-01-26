@@ -1,11 +1,8 @@
 package com.humanup.matrix.training.trainingmatrix.bs.impl;
 
 import com.humanup.matrix.training.trainingmatrix.bs.ReviewBS;
-import com.humanup.matrix.training.trainingmatrix.dao.CourseDAO;
-import com.humanup.matrix.training.trainingmatrix.dao.InternDAO;
+import com.humanup.matrix.training.trainingmatrix.bs.impl.sender.RabbitMQReviewSender;
 import com.humanup.matrix.training.trainingmatrix.dao.ReviewDAO;
-import com.humanup.matrix.training.trainingmatrix.dao.entities.Course;
-import com.humanup.matrix.training.trainingmatrix.dao.entities.Intern;
 import com.humanup.matrix.training.trainingmatrix.dao.entities.InternCourseId;
 import com.humanup.matrix.training.trainingmatrix.dao.entities.Review;
 import com.humanup.matrix.training.trainingmatrix.vo.ReviewVO;
@@ -24,22 +21,15 @@ public class ReviewBSImpl implements ReviewBS {
     @Autowired
     private ReviewDAO reviewDAO;
     @Autowired
-    private InternDAO internDAO;
-    @Autowired
-    private CourseDAO courseDAO;
+    private RabbitMQReviewSender rabbitMQReviewSender;
 
     @Override
-    @Transactional
+    @Transactional(transactionManager="transactionManagerWrite")
     public boolean createReview(final ReviewVO review) {
-        final Optional<Intern> intern =  internDAO.findByEmailPerson(review.getInternEmail());
-        final Optional<Course> course =  courseDAO.findByTitle(review.getCourseTitle());
-        final Review reviewToSave = Review.builder()
-                .intern(intern.get())
-                .course(course.get())
-                .score(review.getScore())
-                .createdOn(review.getCreatedOn())
-                .build();
-        reviewDAO.save(reviewToSave);
+        if(null == review) {
+            return false;
+        }
+        rabbitMQReviewSender.send(review);
         return true;
     }
 
@@ -59,7 +49,9 @@ public class ReviewBSImpl implements ReviewBS {
 
     @Override
     public ReviewVO getReviewById(final long courseId, final long internId) {
-        final Optional<Review> reviewFound = reviewDAO.findById(new InternCourseId(internId, courseId));
+        final Optional<Review> reviewFound = reviewDAO.findById(InternCourseId.builder()
+                .internId(internId)
+                .courseId(courseId).build());
         return reviewFound.map(review -> ReviewVO.builder()
                 .courseId(review.getId().getCourseId())
                 .internId(review.getId().getInternId())

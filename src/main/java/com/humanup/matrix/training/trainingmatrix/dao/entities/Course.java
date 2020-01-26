@@ -16,20 +16,25 @@ import java.util.List;
 @Builder
 @ToString(of= {"id","courseType","trainer","title","description","startDate","endDate","reviewList"})
 @Entity
+@Table(name = "course")
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false, nullable = false)
     Long id;
     @ManyToOne
-    @JoinColumn(name = "idType")
+    @JoinColumn(name = "id_type")
     CourseType courseType;
     @ManyToOne
-    @JoinColumn(name = "idTrainer")
+    @JoinColumn(name = "id_trainer")
     Trainer trainer;
+    @Column(name="title")
     String title;
+    @Column(name="description")
     String description;
+    @Column(name="start_date")
     Date startDate;
+    @Column(name="end_date")
     Date endDate;
     @OneToMany(
             mappedBy = "course",

@@ -64,8 +64,8 @@ public class CourseController {
     @Operation(summary = "Find all courses by type title", description = "Find all courses by type title", tags = { "course" })
     @RequestMapping(value="/course/all/typetitle", method= RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity getListCourseByTypeTitle(@RequestParam(value="typetitle") final String typetitle) {
-        final List<CourseVO> courseListFound = courseBS.getListCourseByTypeTitle(typetitle);
+    public ResponseEntity getListCourseByTypeTitle(@RequestParam(value="typeTitle") final String typeTitle) {
+        final List<CourseVO> courseListFound = courseBS.getListCourseByTypeTitle(typeTitle);
         if(courseListFound.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -73,7 +73,7 @@ public class CourseController {
     }
 
     @Operation(summary = "Find all courses by trainer email", description = "Find all courses by trainer email", tags = { "course" })
-    @RequestMapping(value="/course/all/trainerEmail", method= RequestMethod.GET)
+    @RequestMapping(value="/course/all/traineremail", method= RequestMethod.GET)
     @ResponseBody
     public ResponseEntity getListCourseByTrainerEmail(@RequestParam(value="trainerEmail") final String trainerEmail) {
         final List<CourseVO> courseListFound = courseBS.getListCourseByTrainerEmail(trainerEmail);
@@ -84,7 +84,7 @@ public class CourseController {
     }
 
     @Operation(summary = "Find all courses by intern email", description = "Find all courses by intern email", tags = { "course" })
-    @RequestMapping(value="/course/all/internEmail", method= RequestMethod.GET)
+    @RequestMapping(value="/course/all/internemail", method= RequestMethod.GET)
     @ResponseBody
     public ResponseEntity getListCourseByInternEmail(@RequestParam(value="internEmail") final String internEmail) {
         final List<CourseVO> courseListFound = courseBS.getListCourseByInternEmail(internEmail);
@@ -92,27 +92,5 @@ public class CourseController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         return ResponseEntity.status(HttpStatus.OK).body(courseListFound);
-    }
-
-    @Operation(summary = "Add trainer to course", description = "Add trainer to course", tags = { "course" })
-    @RequestMapping(value="/course/traineremail", method= RequestMethod.PUT)
-    @ResponseBody
-    public ResponseEntity addTrainer(@RequestParam(value="courseTitle") final String courseTitle, @RequestParam(value="traineremail") final String trainerEmail) {
-        final boolean isCourseModified = courseBS.addTrainerToCourse(trainerEmail, courseTitle);
-        if(isCourseModified) {
-            return ResponseEntity.status(HttpStatus.OK).build();
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    }
-
-    @Operation(summary = "Add course type to course", description = "Add course type to course", tags = { "course" })
-    @RequestMapping(value="/course/coursetype", method= RequestMethod.PUT)
-    @ResponseBody
-    public ResponseEntity addCourseType(@RequestParam(value="courseTitle") final String courseTitle, @RequestParam(value="courseType") final String courseType) {
-        final boolean isCourseModified = courseBS.addCourseTypeToCourse(courseType, courseTitle);
-        if(isCourseModified) {
-            return ResponseEntity.status(HttpStatus.OK).build();
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 }

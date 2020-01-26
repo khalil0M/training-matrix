@@ -4,6 +4,7 @@ package com.humanup.matrix.training.trainingmatrix.vo;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
 @Setter
 @Builder
 @ToString(of={"id","courseType","trainerEmail","title","description","startDate","endDate","reviewList"})
-public class CourseVO {
+public class CourseVO implements Serializable {
     long id;
     String courseTypeTitle;
     String trainerEmail;

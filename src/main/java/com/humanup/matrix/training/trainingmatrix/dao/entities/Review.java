@@ -14,6 +14,7 @@ import java.util.Date;
 @Builder
 @ToString(of= {"id","course","intern","createdOn","score"})
 @Entity
+@Table(name = "review")
 public class Review {
     @EmbeddedId
     InternCourseId id;

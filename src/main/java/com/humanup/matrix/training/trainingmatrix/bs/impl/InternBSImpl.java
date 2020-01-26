@@ -1,8 +1,8 @@
 package com.humanup.matrix.training.trainingmatrix.bs.impl;
 
 import com.humanup.matrix.training.trainingmatrix.bs.InternBS;
+import com.humanup.matrix.training.trainingmatrix.bs.impl.sender.RabbitMQInternSender;
 import com.humanup.matrix.training.trainingmatrix.dao.InternDAO;
-import com.humanup.matrix.training.trainingmatrix.dao.ReviewDAO;
 import com.humanup.matrix.training.trainingmatrix.dao.entities.Intern;
 import com.humanup.matrix.training.trainingmatrix.vo.InternVO;
 import com.humanup.matrix.training.trainingmatrix.vo.ReviewVO;
@@ -21,16 +21,15 @@ public class InternBSImpl implements InternBS {
     @Autowired
     private InternDAO internDAO;
     @Autowired
-    private ReviewDAO reviewDAO;
+    private RabbitMQInternSender rabbitMQInternSender;
 
     @Override
-    @Transactional
+    @Transactional(transactionManager="transactionManagerWrite")
     public boolean createIntern(final InternVO intern) {
-        final Intern internToSave = Intern.builder()
-                .emailPerson(intern.getEmailPerson())
-                .reviewList(reviewDAO.findAllByInternEmail(intern.getEmailPerson()))
-                .build();
-        internDAO.save(internToSave);
+        if(null == intern) {
+            return false;
+        }
+        rabbitMQInternSender.send(intern);
         return true;
     }
 
