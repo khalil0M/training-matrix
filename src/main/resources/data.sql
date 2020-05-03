@@ -15,7 +15,7 @@ INSERT INTO course (id_type, id_trainer, title, description,start_date,end_date)
 INSERT INTO intern (email_person) VALUES
   ('said@email.com'),
   ('youcef@email.com'),
-  ('mamado@email.com'),
+  ('mohamed@email.com'),
   ('paul@email.com');
 
 INSERT INTO review (intern_id,course_id,created_on,score) VALUES

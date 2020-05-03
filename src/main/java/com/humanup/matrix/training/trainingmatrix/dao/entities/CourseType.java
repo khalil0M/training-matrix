@@ -22,6 +22,6 @@ public class CourseType {
     Long id;
     @Column(name = "type_title")
     String typeTitle;
-    @OneToMany(mappedBy="courseType",fetch=FetchType.EAGER)
+    @OneToMany(mappedBy="courseType",fetch=FetchType.LAZY)
     List<Course> courses;
 }
