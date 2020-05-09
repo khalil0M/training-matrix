@@ -1,5 +1,6 @@
 package com.humanup.matrix.training.trainingmatrix.bs.impl;
 
+import com.humanup.matrix.training.trainingmatrix.aop.dto.CourseException;
 import com.humanup.matrix.training.trainingmatrix.bs.CourseBS;
 import com.humanup.matrix.training.trainingmatrix.bs.impl.sender.RabbitMQCourseSender;
 import com.humanup.matrix.training.trainingmatrix.dao.CourseDAO;
@@ -24,10 +25,12 @@ public class CourseBSImpl implements CourseBS {
   @Autowired private RabbitMQCourseSender rabbitMQCourseSender;
 
   @Override
-  @Transactional(transactionManager = "transactionManagerWrite")
-  public boolean createCourse(final CourseVO course) {
+  @Transactional(
+      transactionManager = "transactionManagerWrite",
+      rollbackFor = CourseException.class)
+  public boolean createCourse(final CourseVO course) throws CourseException {
     if (null == course) {
-      return false;
+      throw new CourseException();
     }
     rabbitMQCourseSender.send(course);
     return true;
@@ -39,7 +42,6 @@ public class CourseBSImpl implements CourseBS {
         .map(
             courseFound ->
                 CourseVO.builder()
-                    .id(courseFound.getId())
                     .title(courseFound.getTitle())
                     .description(courseFound.getDescription())
                     .startDate(courseFound.getStartDate())
@@ -72,7 +74,6 @@ public class CourseBSImpl implements CourseBS {
         .map(
             course ->
                 CourseVO.builder()
-                    .id(course.getId())
                     .title(course.getTitle())
                     .description(course.getDescription())
                     .startDate(course.getStartDate())
@@ -105,7 +106,6 @@ public class CourseBSImpl implements CourseBS {
         .map(
             course ->
                 CourseVO.builder()
-                    .id(course.getId())
                     .title(course.getTitle())
                     .description(course.getDescription())
                     .startDate(course.getStartDate())
@@ -138,7 +138,6 @@ public class CourseBSImpl implements CourseBS {
         .map(
             course ->
                 CourseVO.builder()
-                    .id(course.getId())
                     .title(course.getTitle())
                     .description(course.getDescription())
                     .startDate(course.getStartDate())
@@ -171,7 +170,6 @@ public class CourseBSImpl implements CourseBS {
         .map(
             course ->
                 CourseVO.builder()
-                    .id(course.getId())
                     .title(course.getTitle())
                     .description(course.getDescription())
                     .startDate(course.getStartDate())
@@ -204,7 +202,6 @@ public class CourseBSImpl implements CourseBS {
         .map(
             course ->
                 CourseVO.builder()
-                    .id(course.getId())
                     .title(course.getTitle())
                     .description(course.getDescription())
                     .startDate(course.getStartDate())

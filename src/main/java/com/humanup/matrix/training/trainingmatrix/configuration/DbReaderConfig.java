@@ -19,38 +19,32 @@ import javax.sql.DataSource;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-        entityManagerFactoryRef = "entityManagerFactory",
-        basePackages = {
-        "com.humanup.matrix.training.trainingmatrix.dao"},
-        transactionManagerRef = "transactionManager")
+    entityManagerFactoryRef = "entityManagerFactory",
+    basePackages = {"com.humanup.matrix.training.trainingmatrix.dao"},
+    transactionManagerRef = "transactionManager")
 public class DbReaderConfig {
-    @Primary
-    @Bean(name = "dataSource")
-    @ConfigurationProperties(prefix = "read.datasource")
-    public DataSource dataSource() {
-        return DataSourceBuilder.create().build();
-    }
+  @Primary
+  @Bean(name = "dataSource")
+  @ConfigurationProperties(prefix = "read.datasource")
+  public DataSource dataSource() {
+    return DataSourceBuilder.create().build();
+  }
 
-    @Primary
-    @Bean(name = "entityManagerFactory")
-    public LocalContainerEntityManagerFactoryBean
-    entityManagerFactory(
-            EntityManagerFactoryBuilder builder,
-            @Qualifier("dataSource") DataSource dataSource
-    ) {
-        return builder
-                .dataSource(dataSource)
-                .packages("com.humanup.matrix.training.trainingmatrix.dao.entities")
-                .persistenceUnit("read")
-                .build();
-    }
+  @Primary
+  @Bean(name = "entityManagerFactory")
+  public LocalContainerEntityManagerFactoryBean entityManagerFactory(
+      EntityManagerFactoryBuilder builder, @Qualifier("dataSource") DataSource dataSource) {
+    return builder
+        .dataSource(dataSource)
+        .packages("com.humanup.matrix.training.trainingmatrix.dao.entities")
+        .persistenceUnit("read")
+        .build();
+  }
 
-    @Primary
-    @Bean(name = "transactionManager")
-    public PlatformTransactionManager transactionManager(
-            @Qualifier("entityManagerFactory") EntityManagerFactory
-                    entityManagerFactory
-    ) {
-        return new JpaTransactionManager(entityManagerFactory);
-    }
+  @Primary
+  @Bean(name = "transactionManager")
+  public PlatformTransactionManager transactionManager(
+      @Qualifier("entityManagerFactory") EntityManagerFactory entityManagerFactory) {
+    return new JpaTransactionManager(entityManagerFactory);
+  }
 }

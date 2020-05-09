@@ -7,18 +7,19 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 
-@FieldDefaults(level= AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Builder
-@ToString(of= {"internId","courseId"})
+@ToString(of = {"internId", "courseId"})
 @EqualsAndHashCode
 @Embeddable
 public class InternCourseId implements Serializable {
-    @Column(name = "intern_id")
-    long internId;
-    @Column(name = "course_id")
-    long courseId;
+  @Column(name = "intern_id")
+  long internId;
+
+  @Column(name = "course_id")
+  long courseId;
 }

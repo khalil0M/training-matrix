@@ -9,7 +9,9 @@ import java.util.Optional;
 
 @Repository
 public interface TrainerDAO extends JpaRepository<Trainer, Long> {
-    List<Trainer> findAllByName(String name);
-    Optional<Trainer> findByPhone(String phone);
-    Optional<Trainer> findByEmail(String email);
+  List<Trainer> findAllByName(String name);
+
+  Optional<Trainer> findByPhone(String phone);
+
+  Optional<Trainer> findByEmail(String email);
 }

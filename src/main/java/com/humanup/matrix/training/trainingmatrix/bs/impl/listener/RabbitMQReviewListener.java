@@ -18,46 +18,42 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-
 @Component
 @EnableRabbit
 @RefreshScope
 public class RabbitMQReviewListener {
-    private static final Logger LOGGER = LoggerFactory.getLogger(RabbitMQReviewListener.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(RabbitMQReviewListener.class);
 
-    @Autowired
-    private InternDAO internDAO;
-    @Autowired
-    private CourseDAO courseDAO;
-    @Autowired
-    private ReviewDAO reviewDAO;
+  @Autowired private InternDAO internDAO;
+  @Autowired private CourseDAO courseDAO;
+  @Autowired private ReviewDAO reviewDAO;
 
-    @RabbitListener(queues = { "${review.queue.name}" })
-    public void receive(final ReviewVO review) {
-        try {
-            LOGGER.info("Received message... {} ", review);
-            final Optional<Intern> intern =  internDAO.findById(review.getInternId());
-            final Optional<Course> course =  courseDAO.findById(review.getCourseId());
+  @RabbitListener(queues = {"${review.queue.name}"})
+  public void receive(final ReviewVO review) {
+    try {
+      LOGGER.info("Received message... {} ", review);
+      final Optional<Intern> intern = internDAO.findById(review.getInternId());
+      final Optional<Course> course = courseDAO.findById(review.getCourseId());
 
-            if (!intern.isPresent() || !course.isPresent()) {
-                LOGGER.info("Received message as generic: {}", review);
-            }
+      if (!intern.isPresent() || !course.isPresent()) {
+        LOGGER.info("Received message as generic: {}", review);
+      }
 
-            final Review reviewToSave = Review.builder()
-                    .id(InternCourseId.builder()
-                            .courseId(review.getCourseId())
-                            .internId(review.getInternId())
-                            .build())
-                    .intern(intern.get())
-                    .course(course.get())
-                    .score(review.getScore())
-                    .createdOn(review.getCreatedOn())
-                    .build();
-            reviewDAO.save(reviewToSave);
-        }catch(final Exception ex){
-            LOGGER.info("Error message... {} ", ex.getMessage(), ex);
-        }
+      final Review reviewToSave =
+          Review.builder()
+              .id(
+                  InternCourseId.builder()
+                      .courseId(review.getCourseId())
+                      .internId(review.getInternId())
+                      .build())
+              .intern(intern.get())
+              .course(course.get())
+              .score(review.getScore())
+              .createdOn(review.getCreatedOn())
+              .build();
+      reviewDAO.save(reviewToSave);
+    } catch (final Exception ex) {
+      LOGGER.info("Error message... {} ", ex.getMessage(), ex);
     }
-
+  }
 }
-

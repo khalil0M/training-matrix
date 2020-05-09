@@ -20,48 +20,43 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Optional;
 
-
 @Component
 @EnableRabbit
 @RefreshScope
 public class RabbitMQCourseListener {
-    private static final Logger LOGGER = LoggerFactory.getLogger(RabbitMQCourseListener.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(RabbitMQCourseListener.class);
 
-    @Autowired
-    private CourseDAO courseDAO;
-    @Autowired
-    private CourseTypeDAO courseTypeDAO;
-    @Autowired
-    private TrainerDAO trainerDAO;
-    @Autowired
-    private ReviewDAO reviewDAO;
+  @Autowired private CourseDAO courseDAO;
+  @Autowired private CourseTypeDAO courseTypeDAO;
+  @Autowired private TrainerDAO trainerDAO;
+  @Autowired private ReviewDAO reviewDAO;
 
-    @RabbitListener(queues = { "${course.queue.name}" })
-    public void receive(final CourseVO course) {
-        try {
-            LOGGER.info("Received message... {} ", course);
-            final Optional<CourseType> courseType = courseTypeDAO.findByTypeTitle(course.getCourseTypeTitle());
-            final Optional<Trainer> trainer =  trainerDAO.findByEmail(course.getTrainerEmail());
-            final List<Review> reviewList =  reviewDAO.findAllByCourseTitle(course.getTitle());
+  @RabbitListener(queues = {"${course.queue.name}"})
+  public void receive(final CourseVO course) {
+    try {
+      LOGGER.info("Received message... {} ", course);
+      final Optional<CourseType> courseType =
+          courseTypeDAO.findByTypeTitle(course.getCourseTypeTitle());
+      final Optional<Trainer> trainer = trainerDAO.findByEmail(course.getTrainerEmail());
+      final List<Review> reviewList = reviewDAO.findAllByCourseTitle(course.getTitle());
 
-            if (!courseType.isPresent() || !trainer.isPresent() || reviewList.isEmpty()) {
-                LOGGER.info("Received message as generic: {}", course);
-            }
+      if (!courseType.isPresent() || !trainer.isPresent() || reviewList.isEmpty()) {
+        LOGGER.info("Received message as generic: {}", course);
+      }
 
-            final Course courseToSave = Course.builder()
-                    .title(course.getTitle())
-                    .description(course.getDescription())
-                    .startDate(course.getStartDate())
-                    .endDate(course.getEndDate())
-                    .courseType(courseType.get())
-                    .trainer(trainer.get())
-                    .reviewList(reviewList)
-                    .build();
-            courseDAO.save(courseToSave);
-        }catch(final Exception ex){
-            LOGGER.info("Error message... {} ", ex.getMessage(), ex);
-        }
+      final Course courseToSave =
+          Course.builder()
+              .title(course.getTitle())
+              .description(course.getDescription())
+              .startDate(course.getStartDate())
+              .endDate(course.getEndDate())
+              .courseType(courseType.get())
+              .trainer(trainer.get())
+              .reviewList(reviewList)
+              .build();
+      courseDAO.save(courseToSave);
+    } catch (final Exception ex) {
+      LOGGER.info("Error message... {} ", ex.getMessage(), ex);
     }
-
+  }
 }
-
