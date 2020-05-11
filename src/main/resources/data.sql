@@ -16,7 +16,7 @@ INSERT INTO intern (email_person) VALUES
   ('said@email.com'),
   ('youcef@email.com'),
   ('mohamed@email.com'),
-  ('paul@email.com');
+  ('adangote@sqli.com');
 
 INSERT INTO review (intern_id,course_id,created_on,score) VALUES
   (1,2,'2020-01-02',3),
