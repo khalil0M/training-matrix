@@ -1,6 +1,6 @@
-CREATE database trainingmatrixdb;
+CREATE DATABASE IF NOT EXISTS trainingmatrixdb;
 
-Use trainingmatrixdb;
+USE trainingmatrixdb;
 
 DROP TABLE IF EXISTS course;
 DROP TABLE IF EXISTS course_type;

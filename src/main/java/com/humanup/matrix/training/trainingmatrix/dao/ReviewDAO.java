@@ -10,9 +10,11 @@ import java.util.List;
 
 @Repository
 public interface ReviewDAO extends JpaRepository<Review, InternCourseId> {
-    List<Review> findAllByScore(int score);
-    @Query("SELECT r FROM Review r WHERE r.course.title = :courseTitle")
-    List<Review> findAllByCourseTitle(String courseTitle);
-    @Query("SELECT r FROM Review r WHERE r.intern.emailPerson = :internEmail")
-    List<Review> findAllByInternEmail(String internEmail);
+  List<Review> findAllByScore(int score);
+
+  @Query("SELECT r FROM Review r WHERE r.course.title like %:courseTitle%")
+  List<Review> findAllByCourseTitle(String courseTitle);
+
+  @Query("SELECT r FROM Review r WHERE r.intern.emailPerson like %:internEmail%")
+  List<Review> findAllByInternEmail(String internEmail);
 }

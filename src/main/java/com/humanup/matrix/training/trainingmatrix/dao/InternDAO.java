@@ -10,8 +10,10 @@ import java.util.Optional;
 
 @Repository
 public interface InternDAO extends JpaRepository<Intern, Long> {
-    Optional<Intern> findByEmailPerson(String emailPerson);
-    @Query("SELECT i FROM Intern as i, Course c, Review r WHERE c.title = :courseTitle" +
-            " AND r.id.courseId = c.id AND r.id.internId = i.id")
-    List<Intern> findAllByCourseTitle(String courseTitle);
+  Optional<Intern> findByEmailPerson(String emailPerson);
+
+  @Query(
+      "SELECT i FROM Intern as i, Course c, Review r WHERE c.title like %:courseTitle%"
+          + " AND r.id.courseId = c.id AND r.id.internId = i.id")
+  List<Intern> findAllByCourseTitle(String courseTitle);
 }

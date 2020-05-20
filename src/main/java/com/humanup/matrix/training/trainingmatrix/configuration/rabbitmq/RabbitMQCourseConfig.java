@@ -11,27 +11,27 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQCourseConfig {
 
-    @Value("${course.queue.name}")
-    String queueName;
+  @Value("${course.queue.name}")
+  String queueName;
 
-    @Value("${course.exchange.name}")
-    String exchange;
+  @Value("${course.exchange.name}")
+  String exchange;
 
-    @Value("${course.routing.key}")
-    String routingkey;
+  @Value("${course.routing.key}")
+  String routingkey;
 
-    @Bean
-    Queue courseQueue() {
-        return new Queue(queueName, true, false, true);
-    }
+  @Bean
+  Queue courseQueue() {
+    return new Queue(queueName, true, false, true);
+  }
 
-    @Bean
-    DirectExchange courseExchange() {
-        return new DirectExchange(exchange);
-    }
+  @Bean
+  DirectExchange courseExchange() {
+    return new DirectExchange(exchange);
+  }
 
-    @Bean
-    Binding courseBinding(final Queue courseQueue, final DirectExchange courseExchange) {
-        return BindingBuilder.bind(courseQueue).to(courseExchange).with(routingkey);
-    }
+  @Bean
+  Binding courseBinding(final Queue courseQueue, final DirectExchange courseExchange) {
+    return BindingBuilder.bind(courseQueue).to(courseExchange).with(routingkey);
+  }
 }

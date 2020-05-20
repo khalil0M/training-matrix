@@ -11,27 +11,27 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQReviewConfig {
 
-    @Value("${review.queue.name}")
-    String queueName;
+  @Value("${review.queue.name}")
+  String queueName;
 
-    @Value("${review.exchange.name}")
-    String exchange;
+  @Value("${review.exchange.name}")
+  String exchange;
 
-    @Value("${review.routing.key}")
-    String routingkey;
+  @Value("${review.routing.key}")
+  String routingkey;
 
-    @Bean
-    Queue reviewQueue() {
-        return new Queue(queueName, true, false, true);
-    }
+  @Bean
+  Queue reviewQueue() {
+    return new Queue(queueName, true, false, true);
+  }
 
-    @Bean
-    DirectExchange reviewExchange() {
-        return new DirectExchange(exchange);
-    }
+  @Bean
+  DirectExchange reviewExchange() {
+    return new DirectExchange(exchange);
+  }
 
-    @Bean
-    Binding reviewBinding(final Queue reviewQueue, final DirectExchange reviewExchange) {
-        return BindingBuilder.bind(reviewQueue).to(reviewExchange).with(routingkey);
-    }
+  @Bean
+  Binding reviewBinding(final Queue reviewQueue, final DirectExchange reviewExchange) {
+    return BindingBuilder.bind(reviewQueue).to(reviewExchange).with(routingkey);
+  }
 }

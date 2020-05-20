@@ -12,31 +12,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
 
-
 @Component
 @EnableRabbit
 @RefreshScope
 public class RabbitMQInternListener {
-    private static final Logger LOGGER = LoggerFactory.getLogger(RabbitMQInternListener.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(RabbitMQInternListener.class);
 
-    @Autowired
-    private InternDAO internDAO;
-    @Autowired
-    private ReviewDAO reviewDAO;
+  @Autowired private InternDAO internDAO;
+  @Autowired private ReviewDAO reviewDAO;
 
-    @RabbitListener(queues = { "${intern.queue.name}" })
-    public void receive(final InternVO intern) {
-        try {
-            LOGGER.info("Received message... {} ", intern);
+  @RabbitListener(queues = {"${intern.queue.name}"})
+  public void receive(final InternVO intern) {
+    try {
+      LOGGER.info("Received message... {} ", intern);
 
-            final Intern internToSave = Intern.builder()
-                    .emailPerson(intern.getEmailPerson())
-                    .build();
-            internDAO.save(internToSave);
-        }catch(final Exception ex){
-            LOGGER.info("Error message... {} ", ex.getMessage(), ex);
-        }
+      final Intern internToSave = Intern.builder().emailPerson(intern.getEmailPerson()).build();
+      internDAO.save(internToSave);
+    } catch (final Exception ex) {
+      LOGGER.info("Error message... {} ", ex.getMessage(), ex);
     }
-
+  }
 }
-

@@ -5,14 +5,13 @@ import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
 
-@FieldDefaults(level= AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Builder
-@ToString(of={"id","typeTitle"})
+@ToString(of = {"typeTitle"})
 public class CourseTypeVO implements Serializable {
-    long id;
-    String typeTitle;
+  String typeTitle;
 }

@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface CourseTypeDAO extends JpaRepository<CourseType, Long> {
-    Optional<CourseType> findByTypeTitle(String typeTitle);
+  Optional<CourseType> findByTypeTitle(String typeTitle);
 }

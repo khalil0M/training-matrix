@@ -15,39 +15,32 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
-
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-        entityManagerFactoryRef = "entityManagerFactoryWrite",
-        basePackages = {
-        "com.humanup.matrix.training.trainingmatrix.dao"},
-        transactionManagerRef = "transactionManagerWrite")
+    entityManagerFactoryRef = "entityManagerFactoryWrite",
+    basePackages = {"com.humanup.matrix.training.trainingmatrix.dao"},
+    transactionManagerRef = "transactionManagerWrite")
 public class DbWriteConfig {
-    @Bean(name = "dataSourceWrite")
-    @ConfigurationProperties(prefix = "write.datasource")
-    public DataSource dataSource() {
-        return DataSourceBuilder.create().build();
-    }
+  @Bean(name = "dataSourceWrite")
+  @ConfigurationProperties(prefix = "write.datasource")
+  public DataSource dataSource() {
+    return DataSourceBuilder.create().build();
+  }
 
-    @Bean(name = "entityManagerFactoryWrite")
-    public LocalContainerEntityManagerFactoryBean
-    entityManagerFactory(
-            EntityManagerFactoryBuilder builder,
-            @Qualifier("dataSourceWrite") DataSource dataSource
-    ) {
-        return builder
-                .dataSource(dataSource)
-                .packages("com.humanup.matrix.training.trainingmatrix.dao.entities")
-                .persistenceUnit("write")
-                .build();
-    }
+  @Bean(name = "entityManagerFactoryWrite")
+  public LocalContainerEntityManagerFactoryBean entityManagerFactory(
+      EntityManagerFactoryBuilder builder, @Qualifier("dataSourceWrite") DataSource dataSource) {
+    return builder
+        .dataSource(dataSource)
+        .packages("com.humanup.matrix.training.trainingmatrix.dao.entities")
+        .persistenceUnit("write")
+        .build();
+  }
 
-    @Bean(name = "transactionManagerWrite")
-    public PlatformTransactionManager transactionManager(
-            @Qualifier("entityManagerFactoryWrite") EntityManagerFactory
-                    entityManagerFactory
-    ) {
-        return new JpaTransactionManager(entityManagerFactory);
-    }
+  @Bean(name = "transactionManagerWrite")
+  public PlatformTransactionManager transactionManager(
+      @Qualifier("entityManagerFactoryWrite") EntityManagerFactory entityManagerFactory) {
+    return new JpaTransactionManager(entityManagerFactory);
+  }
 }

@@ -36,7 +36,7 @@ Feature: Intern End Point
     * def intern5 = response[4]
     And match intern1 contains {emailPerson:"said@email.com"}
     And match intern2 contains {emailPerson:"youcef@email.com"}
-    And match intern3 contains {emailPerson:"mamado@email.com"}
+    And match intern3 contains {emailPerson:"mohamed@email.com"}
     And match intern4 contains {emailPerson:"paul@email.com"}
     And match intern5 contains {emailPerson:"karim@email.com"}
 

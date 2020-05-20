@@ -11,27 +11,27 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQInternConfig {
 
-    @Value("${intern.queue.name}")
-    String queueName;
+  @Value("${intern.queue.name}")
+  String queueName;
 
-    @Value("${intern.exchange.name}")
-    String exchange;
+  @Value("${intern.exchange.name}")
+  String exchange;
 
-    @Value("${intern.routing.key}")
-    String routingkey;
+  @Value("${intern.routing.key}")
+  String routingkey;
 
-    @Bean
-    Queue internQueue() {
-        return new Queue(queueName, true, false, true);
-    }
+  @Bean
+  Queue internQueue() {
+    return new Queue(queueName, true, false, true);
+  }
 
-    @Bean
-    DirectExchange internExchange() {
-        return new DirectExchange(exchange);
-    }
+  @Bean
+  DirectExchange internExchange() {
+    return new DirectExchange(exchange);
+  }
 
-    @Bean
-    Binding internBinding(final Queue internQueue, final DirectExchange internExchange) {
-        return BindingBuilder.bind(internQueue).to(internExchange).with(routingkey);
-    }
+  @Bean
+  Binding internBinding(final Queue internQueue, final DirectExchange internExchange) {
+    return BindingBuilder.bind(internQueue).to(internExchange).with(routingkey);
+  }
 }

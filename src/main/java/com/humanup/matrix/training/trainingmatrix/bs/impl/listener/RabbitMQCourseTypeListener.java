@@ -11,29 +11,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
 
-
 @Component
 @EnableRabbit
 @RefreshScope
 public class RabbitMQCourseTypeListener {
-    private static final Logger LOGGER = LoggerFactory.getLogger(RabbitMQCourseTypeListener.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(RabbitMQCourseTypeListener.class);
 
-    @Autowired
-    private CourseTypeDAO courseTypeDAO;
+  @Autowired private CourseTypeDAO courseTypeDAO;
 
-    @RabbitListener(queues = { "${coursetype.queue.name}" })
-    public void receive(final CourseTypeVO courseType) {
-        try {
-            LOGGER.info("Received message... {} ", courseType);
+  @RabbitListener(queues = {"${coursetype.queue.name}"})
+  public void receive(final CourseTypeVO courseType) {
+    try {
+      LOGGER.info("Received message... {} ", courseType);
 
-            final CourseType courseTypeToSave = CourseType.builder()
-                    .typeTitle(courseType.getTypeTitle())
-                    .build();
-            courseTypeDAO.save(courseTypeToSave);
-        }catch(final Exception ex){
-            LOGGER.info("Error message... {} ", ex.getMessage(), ex);
-        }
+      final CourseType courseTypeToSave =
+          CourseType.builder().typeTitle(courseType.getTypeTitle()).build();
+      courseTypeDAO.save(courseTypeToSave);
+    } catch (final Exception ex) {
+      LOGGER.info("Error message... {} ", ex.getMessage(), ex);
     }
-
+  }
 }
-

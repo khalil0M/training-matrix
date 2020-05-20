@@ -60,12 +60,12 @@ Feature: Review End Point
     * def review4 = response[3]
     * def review5 = response[4]
     * def review6 = response[5]
-    And match review1 contains {internId:1,courseId:2}
-    And match review2 contains {internId:1,courseId:3}
-    And match review3 contains {internId:2,courseId:1}
-    And match review4 contains {internId:3,courseId:1}
-    And match review5 contains {internId:4,courseId:3}
-    And match review6 contains {internId:4,courseId:2}
+    And match review1 contains {courseId:1,internId:2}
+    And match review2 contains {courseId:1,internId:3}
+    And match review3 contains {courseId:2,internId:1}
+    And match review4 contains {courseId:2,internId:4}
+    And match review5 contains {courseId:3,internId:1}
+    And match review6 contains {courseId:3,internId:4}
 
   Scenario: Add new review KO response
     Given  path '/review'
